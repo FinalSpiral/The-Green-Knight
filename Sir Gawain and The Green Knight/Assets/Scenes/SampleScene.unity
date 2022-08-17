@@ -2220,8 +2220,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 1854450296}
-  lockOn: 1
-  speed: 0
+  extra: {fileID: 0}
+  timeToSwitch: 1
 --- !u!1 &977113295
 GameObject:
   m_ObjectHideFlags: 0
@@ -2569,7 +2569,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh21206
+  m_Name: pb_Mesh21218
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
