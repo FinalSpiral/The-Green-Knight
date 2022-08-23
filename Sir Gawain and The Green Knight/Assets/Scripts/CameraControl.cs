@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CameraControl : MonoBehaviour
 {
-    public Transform target, extra;   
+    public Transform target;   
 
     [SerializeField]
     private float timeToSwitch;
@@ -19,7 +19,6 @@ public class CameraControl : MonoBehaviour
     void Start()
     {
         lockOn = true;
-        SwitchTo(extra);
     }
 
     // Update is called once per frame
