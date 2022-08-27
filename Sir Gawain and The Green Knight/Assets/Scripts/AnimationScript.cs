@@ -12,6 +12,8 @@ public class AnimationScript : MonoBehaviour
     private int framesPerSecond, width, height, step, animationIndex;
     [SerializeField]
     private List<Vector3Int> animations;
+    [SerializeField]
+    private List<Vector2Int> frameCol;
 
     private float time, frameSpan;
 
