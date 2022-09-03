@@ -17,7 +17,11 @@ public class AnimationScript : MonoBehaviour
 
     private float time, frameSpan;
 
-    private bool animate = true; 
+    private bool animate = true;
+    
+    private bool finished = false;
+
+    public bool Finished { get { return finished; } }
 
     int i = 0, x, y, widthI, heightI, yI, xI;
 
@@ -58,10 +62,10 @@ public class AnimationScript : MonoBehaviour
                 x = xI * step;
                 y = height - (step * yI);
 
-                uv[0] = ConvertPixelsToUVCord(x, y - step, width, height);
-                uv[1] = ConvertPixelsToUVCord(x + step, y - step, width, height);
-                uv[2] = ConvertPixelsToUVCord(x, y, width, height);
-                uv[3] = ConvertPixelsToUVCord(x + step, y, width, height);
+                uv[0] = ConvertPixelsToUVCord(x+1, y - step, width, height);
+                uv[1] = ConvertPixelsToUVCord(x + step-1, y - step, width, height);
+                uv[2] = ConvertPixelsToUVCord(x+1, y-1, width, height);
+                uv[3] = ConvertPixelsToUVCord(x + step-1, y-1, width, height);
 
                 mesh.uv = uv;
                 i++;
@@ -72,9 +76,11 @@ public class AnimationScript : MonoBehaviour
                     if (animations[animationIndex].z == 0)
                     {
                         animate = false;
+                        finished = true;
                     }
                 }
 
+                frameSpan = 1f / framesPerSecond;
                 time = frameSpan;
             }
         }
@@ -85,6 +91,7 @@ public class AnimationScript : MonoBehaviour
         animationIndex = aI;
         i = animations[animationIndex].x;
         animate = true;
+        finished = false;
     }
 
     public Vector2 ConvertPixelsToUVCord(int x, int y, int textureWidth, int textureHeight)

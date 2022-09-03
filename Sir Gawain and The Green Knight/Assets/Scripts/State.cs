@@ -11,5 +11,6 @@ public enum State
     Stunned,
     Standing,
     Parrying,
-    Charging
+    Charging,
+    RaisingBlock
 }

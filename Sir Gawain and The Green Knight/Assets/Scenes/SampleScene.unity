@@ -14400,6 +14400,7 @@ GameObject:
   - component: {fileID: 1019831751}
   - component: {fileID: 1019831750}
   - component: {fileID: 1019831749}
+  - component: {fileID: 1019831753}
   - component: {fileID: 1019831752}
   - component: {fileID: 1019831748}
   - component: {fileID: 1019831747}
@@ -14538,6 +14539,26 @@ MonoBehaviour:
   - {x: 0, y: 5, z: 1}
   - {x: 6, y: 7, z: 0}
   - {x: 0, y: 0, z: 1}
+  frameCol: []
+--- !u!114 &1019831753
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1019831745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c6576d872e307f469accbad773ef2a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  walking: 0
+  blocking: 0
+  reciving: 0
+  attacking: 0
+  stunned: 0
+  parry: 0
+  charging: 0
 --- !u!43 &1032715529
 Mesh:
   m_ObjectHideFlags: 0
