@@ -9,9 +9,9 @@ public class AnimationScript : MonoBehaviour
     private Vector2[] uv = new Vector2[4];
 
     [SerializeField]
-    private int framesPerSecond, width, height, step, animationIndex;
+    private int framesPerSecond, width, height, stepX, stepY, animationIndex;
     [SerializeField]
-    private List<Vector3Int> animations;
+    private List<AnimationData> animations;
     [SerializeField]
     private List<Vector2Int> frameCol;
 
@@ -28,23 +28,24 @@ public class AnimationScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        widthI = width / step; heightI = height / step;
+        framesPerSecond = animations[animationIndex].framesPerSecond;
+        widthI = width / stepX; heightI = height / stepY;
        
-        i = animations[animationIndex].x;
+        i = animations[animationIndex].from;
 
         xI = i - ((i / widthI) * widthI); yI = i / widthI;
 
-        x = xI * step;
-        y = height - (step * yI);
+        x = xI * stepX;
+        y = height - (stepY * yI);
 
         frameSpan = 1f / framesPerSecond;
         time = frameSpan;
         mesh = GetComponent<MeshFilter>().mesh;
 
-        uv[0] = ConvertPixelsToUVCord(x, y - step, width, height);
-        uv[1] = ConvertPixelsToUVCord(x + step, y - step, width, height);
+        uv[0] = ConvertPixelsToUVCord(x, y - stepY, width, height);
+        uv[1] = ConvertPixelsToUVCord(x + stepX, y - stepY, width, height);
         uv[2] = ConvertPixelsToUVCord(x, y, width, height);
-        uv[3] = ConvertPixelsToUVCord(x + step, y, width, height);
+        uv[3] = ConvertPixelsToUVCord(x + stepX, y, width, height);
 
         mesh.uv = uv;     
     }
@@ -54,26 +55,27 @@ public class AnimationScript : MonoBehaviour
     {
         if (animate)
         {
+            framesPerSecond = animations[animationIndex].framesPerSecond;
             time -= Time.deltaTime;
             if (time <= 0)
             {
                 xI = i - ((i / widthI) * widthI); yI = i / widthI;
 
-                x = xI * step;
-                y = height - (step * yI);
+                x = xI * stepX;
+                y = height - (stepY * yI);
 
-                uv[0] = ConvertPixelsToUVCord(x+1, y - step, width, height);
-                uv[1] = ConvertPixelsToUVCord(x + step-1, y - step, width, height);
+                uv[0] = ConvertPixelsToUVCord(x+1, y - stepY, width, height);
+                uv[1] = ConvertPixelsToUVCord(x + stepX-1, y - stepY, width, height);
                 uv[2] = ConvertPixelsToUVCord(x+1, y-1, width, height);
-                uv[3] = ConvertPixelsToUVCord(x + step-1, y-1, width, height);
+                uv[3] = ConvertPixelsToUVCord(x + stepX-1, y-1, width, height);
 
                 mesh.uv = uv;
                 i++;
 
-                if (i > animations[animationIndex].y)
+                if (i > animations[animationIndex].to)
                 {
-                    i = animations[animationIndex].x;
-                    if (animations[animationIndex].z == 0)
+                    i = animations[animationIndex].from;
+                    if (!animations[animationIndex].loop)
                     {
                         animate = false;
                         finished = true;
@@ -89,7 +91,7 @@ public class AnimationScript : MonoBehaviour
     public void ChangeAnimation(int aI)
     {
         animationIndex = aI;
-        i = animations[animationIndex].x;
+        i = animations[animationIndex].from;
         animate = true;
         finished = false;
     }
