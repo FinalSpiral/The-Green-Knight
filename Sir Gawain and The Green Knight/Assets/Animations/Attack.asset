@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64f658cf3da5efb428156e31e85d06a2, type: 3}
   m_Name: Attack
   m_EditorClassIdentifier: 
-  from: 5
-  to: 7
+  from: 63
+  to: 66
   loop: 0
   framesPerSecond: 10
   attackFrame: 6

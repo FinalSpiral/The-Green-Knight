@@ -10,6 +10,9 @@ public class CharacterControl : MonoBehaviour
 
     private StateMachine stateMachine;
 
+    [SerializeField]
+    private AnimationScript aniS;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -35,6 +38,22 @@ public class CharacterControl : MonoBehaviour
         if (StateMachine.CurrentState == State.Walking)
         {
             rb.velocity = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized * speed;
+            if (Input.GetAxisRaw("Horizontal") > 0)
+            {
+                if (!aniS.forward)
+                {
+                    aniS.change = true;
+                    aniS.forward = true;
+                }
+            }
+            else if(Input.GetAxisRaw("Horizontal") < 0)
+            {
+                if (aniS.forward)
+                {
+                    aniS.change = true;
+                    aniS.forward = false;
+                }
+            }
         }
         else
         {
