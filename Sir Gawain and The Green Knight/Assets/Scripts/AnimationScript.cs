@@ -122,17 +122,17 @@ public class AnimationScript : MonoBehaviour
                 mesh = GetComponent<MeshFilter>().mesh;
                 if (forward)
                 {
-                    uv[0] = ConvertPixelsToUVCord(x, y - stepY, width, height);
-                    uv[1] = ConvertPixelsToUVCord(x + stepX, y - stepY, width, height);
-                    uv[2] = ConvertPixelsToUVCord(x, y, width, height);
-                    uv[3] = ConvertPixelsToUVCord(x + stepX, y, width, height);
+                    uv[0] = ConvertPixelsToUVCord(x + 1, y - stepY, width, height);
+                    uv[1] = ConvertPixelsToUVCord(x + stepX - 1, y - stepY, width, height);
+                    uv[2] = ConvertPixelsToUVCord(x + 1, y - 1, width, height);
+                    uv[3] = ConvertPixelsToUVCord(x + stepX - 1, y - 1, width, height);
                 }
                 else
                 {
-                    uv[1] = ConvertPixelsToUVCord(x, y - stepY, width, height);
-                    uv[0] = ConvertPixelsToUVCord(x + stepX, y - stepY, width, height);
-                    uv[3] = ConvertPixelsToUVCord(x, y, width, height);
-                    uv[2] = ConvertPixelsToUVCord(x + stepX, y, width, height);
+                    uv[1] = ConvertPixelsToUVCord(x + 1, y - stepY, width, height);
+                    uv[0] = ConvertPixelsToUVCord(x + stepX - 1, y - stepY, width, height);
+                    uv[3] = ConvertPixelsToUVCord(x + 1, y - 1, width, height);
+                    uv[2] = ConvertPixelsToUVCord(x + stepX - 1, y - 1, width, height);
                 }
 
                 mesh.uv = uv;
@@ -154,18 +154,18 @@ public class AnimationScript : MonoBehaviour
                     if (forward)
                     {
                         ic = i;
-                        uv[0] = ConvertPixelsToUVCord(x, y - stepY, width, height);
-                        uv[1] = ConvertPixelsToUVCord(x + stepX, y - stepY, width, height);
-                        uv[2] = ConvertPixelsToUVCord(x, y, width, height);
-                        uv[3] = ConvertPixelsToUVCord(x + stepX , y , width, height);
+                        uv[0] = ConvertPixelsToUVCord(x + 1, y - stepY, width, height);
+                        uv[1] = ConvertPixelsToUVCord(x + stepX - 1, y - stepY, width, height);
+                        uv[2] = ConvertPixelsToUVCord(x + 1, y - 1, width, height);
+                        uv[3] = ConvertPixelsToUVCord(x + stepX - 1, y - 1, width, height);
                     }
                     else
                     {
                         ic = i;
-                        uv[1] = ConvertPixelsToUVCord(x, y - stepY, width, height);
-                        uv[0] = ConvertPixelsToUVCord(x + stepX, y - stepY, width, height);
-                        uv[3] = ConvertPixelsToUVCord(x, y, width, height);
-                        uv[2] = ConvertPixelsToUVCord(x + stepX, y, width, height);
+                        uv[1] = ConvertPixelsToUVCord(x + 1, y - stepY, width, height);
+                        uv[0] = ConvertPixelsToUVCord(x + stepX - 1, y - stepY, width, height);
+                        uv[3] = ConvertPixelsToUVCord(x + 1, y - 1, width, height);
+                        uv[2] = ConvertPixelsToUVCord(x + stepX - 1, y - 1, width, height);
                     }
 
                     mesh.uv = uv;
@@ -189,18 +189,18 @@ public class AnimationScript : MonoBehaviour
                     if (forward)
                     {
                         ic = i;
-                        uv[0] = ConvertPixelsToUVCord(x, y - stepY, width, height);
-                        uv[1] = ConvertPixelsToUVCord(x + stepX, y - stepY, width, height);
-                        uv[2] = ConvertPixelsToUVCord(x, y, width, height);
-                        uv[3] = ConvertPixelsToUVCord(x + stepX, y, width, height);
+                        uv[0] = ConvertPixelsToUVCord(x + 1, y - stepY, width, height);
+                        uv[1] = ConvertPixelsToUVCord(x + stepX - 1, y - stepY, width, height);
+                        uv[2] = ConvertPixelsToUVCord(x + 1, y - 1, width, height);
+                        uv[3] = ConvertPixelsToUVCord(x + stepX - 1, y - 1, width, height);
                     }
                     else
                     {
                         ic = i;
-                        uv[1] = ConvertPixelsToUVCord(x, y - stepY, width, height);
-                        uv[0] = ConvertPixelsToUVCord(x + stepX, y - stepY, width, height);
-                        uv[3] = ConvertPixelsToUVCord(x, y, width, height);
-                        uv[2] = ConvertPixelsToUVCord(x + stepX, y, width, height);
+                        uv[1] = ConvertPixelsToUVCord(x + 1, y - stepY, width, height);
+                        uv[0] = ConvertPixelsToUVCord(x + stepX - 1, y - stepY, width, height);
+                        uv[3] = ConvertPixelsToUVCord(x + 1, y - 1, width, height);
+                        uv[2] = ConvertPixelsToUVCord(x + stepX - 1, y - 1, width, height);
                     }
                     mesh.uv = uv;
                     change = false;

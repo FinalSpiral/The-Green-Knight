@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 64f658cf3da5efb428156e31e85d06a2, type: 3}
-  m_Name: Attack
+  m_Name: StandSword
   m_EditorClassIdentifier: 
-  from: 63
-  to: 66
-  loop: 0
+  from: 9
+  to: 9
+  loop: 1
   framesPerSecond: 10
-  attackFrame: 6
+  attackFrame: -1
