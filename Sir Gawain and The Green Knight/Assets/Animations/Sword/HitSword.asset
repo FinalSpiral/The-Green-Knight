@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 64f658cf3da5efb428156e31e85d06a2, type: 3}
-  m_Name: StunnedAxe
+  m_Name: HitSword
   m_EditorClassIdentifier: 
-  from: 42
-  to: 44
+  from: 0
+  to: 0
   loop: 0
-  framesPerSecond: 5
-  attackFrame: -1
+  framesPerSecond: 0
+  attackFrame: 0

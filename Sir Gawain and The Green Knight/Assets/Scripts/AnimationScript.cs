@@ -32,6 +32,9 @@ public class AnimationScript : MonoBehaviour
 
     public bool Finished { get { return finished; } }
 
+    [HideInInspector]
+    public bool loop;
+
     int i = 0, x, y, widthI, heightI, yI, xI;
 
     private int i2 = -1;
@@ -79,24 +82,33 @@ public class AnimationScript : MonoBehaviour
             x = xI * stepX;
             y = height - (stepY * yI);
 
+            if (!animations[animationIndex].loop)
+            {
+                loop = false;
+            }
+            else
+            {
+                loop = true;
+            }
+
             frameSpan = 1f / framesPerSecond;
             time = frameSpan;
             mesh = GetComponent<MeshFilter>().mesh;
             if (forward)
             {
                 ic = i;
-                uv[0] = ConvertPixelsToUVCord(x, y - stepY, width, height);
-                uv[1] = ConvertPixelsToUVCord(x + stepX, y - stepY, width, height);
-                uv[2] = ConvertPixelsToUVCord(x, y, width, height);
-                uv[3] = ConvertPixelsToUVCord(x + stepX, y, width, height);
+                uv[0] = ConvertPixelsToUVCord(x + 1, y - stepY, width, height);
+                uv[1] = ConvertPixelsToUVCord(x + stepX - 1, y - stepY, width, height);
+                uv[2] = ConvertPixelsToUVCord(x + 1, y - 1, width, height);
+                uv[3] = ConvertPixelsToUVCord(x + stepX - 1, y - 1, width, height);
             }
             else
             {
                 ic = i;
-                uv[1] = ConvertPixelsToUVCord(x, y - stepY, width, height);
-                uv[0] = ConvertPixelsToUVCord(x + stepX, y - stepY, width, height);
-                uv[3] = ConvertPixelsToUVCord(x, y, width, height);
-                uv[2] = ConvertPixelsToUVCord(x + stepX, y, width, height);
+                uv[1] = ConvertPixelsToUVCord(x + 1, y - stepY, width, height);
+                uv[0] = ConvertPixelsToUVCord(x + stepX - 1, y - stepY, width, height);
+                uv[3] = ConvertPixelsToUVCord(x + 1, y - 1, width, height);
+                uv[2] = ConvertPixelsToUVCord(x + stepX - 1, y - 1, width, height);
             }
 
             mesh.uv = uv;
@@ -142,6 +154,14 @@ public class AnimationScript : MonoBehaviour
         {
             if (animate)
             {
+                if (!animations[animationIndex].loop)
+                {
+                    loop = false;
+                }
+                else
+                {
+                    loop = true;
+                }
                 framesPerSecond = animations[animationIndex].framesPerSecond;
                 time -= Time.deltaTime;
                 if (time <= 0)
