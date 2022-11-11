@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 64f658cf3da5efb428156e31e85d06a2, type: 3}
-  m_Name: ChargeSword
+  m_Name: AttackCooldown2
   m_EditorClassIdentifier: 
-  from: 72
-  to: 74
+  from: 71
+  to: 71
   loop: 0
   framesPerSecond: 6
   attackFrame: -1

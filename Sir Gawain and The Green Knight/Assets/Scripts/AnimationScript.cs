@@ -10,8 +10,9 @@ public class AnimationScript : MonoBehaviour
 
     [SerializeField]
     private int framesPerSecond, width, height, stepX, stepY, animationIndex;
-    [SerializeField]
-    private List<AnimationData> animations;
+
+    public List<AnimationData> animations;
+
     [SerializeField]
     private List<Vector2Int> frameCol;
     [SerializeField]
@@ -19,7 +20,10 @@ public class AnimationScript : MonoBehaviour
     [SerializeField]
     private AnimationScript copy;
 
-    public bool forward = true, change = false;
+    public bool forward = true;
+
+    [HideInInspector]
+    public bool change = false, lastFrame=false;
 
     [HideInInspector]
     public int ic = 0;
@@ -33,7 +37,7 @@ public class AnimationScript : MonoBehaviour
     public bool Finished { get { return finished; } }
 
     [HideInInspector]
-    public bool loop;
+    public bool loop = false;
 
     int i = 0, x, y, widthI, heightI, yI, xI;
 
@@ -193,12 +197,20 @@ public class AnimationScript : MonoBehaviour
 
                     if (i > animations[animationIndex].to)
                     {
-                        i = animations[animationIndex].from;
-                        if (!animations[animationIndex].loop)
+                        if (!animations[animationIndex].loop && lastFrame)
                         {
                             animate = false;
                             finished = true;
+                            lastFrame = false;
+                            i = animations[animationIndex].from;
                         }
+                        else if (!animations[animationIndex].loop)
+                        {
+                            lastFrame = true;
+                            i--;
+                        }
+                        if (animations[animationIndex].loop)
+                            i = animations[animationIndex].from;
                     }
 
                     frameSpan = 1f / framesPerSecond;
@@ -206,6 +218,10 @@ public class AnimationScript : MonoBehaviour
                 }
                 if (change)
                 {
+                    xI = i - ((i / widthI) * widthI); yI = i / widthI;
+
+                    x = xI * stepX;
+                    y = height - (stepY * yI);
                     if (forward)
                     {
                         ic = i;
@@ -222,6 +238,9 @@ public class AnimationScript : MonoBehaviour
                         uv[3] = ConvertPixelsToUVCord(x + 1, y - 1, width, height);
                         uv[2] = ConvertPixelsToUVCord(x + stepX - 1, y - 1, width, height);
                     }
+                    framesPerSecond = animations[animationIndex].framesPerSecond;
+                    frameSpan = 1f / framesPerSecond;
+                    time = frameSpan;
                     mesh.uv = uv;
                     change = false;
                 }
@@ -245,5 +264,14 @@ public class AnimationScript : MonoBehaviour
     public Vector2 ConvertPosToUVCord(int x, int y, int size)
     {
         return new Vector2();
+    }
+
+    public int aniIndex()
+    {
+        return animationIndex;
+    }
+    public int getImageNum()
+    {
+        return i;
     }
 }

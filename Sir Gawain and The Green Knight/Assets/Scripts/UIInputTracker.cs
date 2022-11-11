@@ -9,7 +9,7 @@ public class UIInputTracker : MonoBehaviour
 
     private List<KeyCode> inputs;
 
-    private KeyCode[] posibleImputs = { KeyCode.Q , KeyCode.E, KeyCode.F, KeyCode.W, KeyCode.S, KeyCode.A, KeyCode.D };
+    public KeyCode[] posibleImputs = { KeyCode.Q , KeyCode.E, KeyCode.F, KeyCode.W, KeyCode.S, KeyCode.A, KeyCode.D };
 
     // Start is called before the first frame update
     void Awake()

@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64f658cf3da5efb428156e31e85d06a2, type: 3}
   m_Name: AttackCSword
   m_EditorClassIdentifier: 
-  from: 0
-  to: 0
+  from: 75
+  to: 78
   loop: 0
-  framesPerSecond: 0
-  attackFrame: 0
+  framesPerSecond: 15
+  attackFrame: 75

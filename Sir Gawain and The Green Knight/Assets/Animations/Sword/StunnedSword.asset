@@ -15,5 +15,5 @@ MonoBehaviour:
   from: 39
   to: 41
   loop: 0
-  framesPerSecond: 5
+  framesPerSecond: 4
   attackFrame: -1
