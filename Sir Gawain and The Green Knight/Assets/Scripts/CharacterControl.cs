@@ -30,6 +30,9 @@ public class CharacterControl : MonoBehaviour
 
     private bool allowHit = true;
 
+    [SerializeField]
+    private SideMovement sm;
+
     void Awake()
     {
         //Definitions
@@ -91,7 +94,7 @@ public class CharacterControl : MonoBehaviour
     private void Update()
     {
         //Movement input
-        if (Input.GetAxisRaw("Horizontal")!=0 || Input.GetAxisRaw("Vertical") != 0 )
+        if (Input.GetAxisRaw("Horizontal")!=0 || Input.GetAxisRaw("Vertical") != 0 || sm.move)
         {
             CharacterTransition(StateIdentifier.Walking, 1);          
         }        
@@ -238,10 +241,10 @@ public class CharacterControl : MonoBehaviour
         }
 
         //Standing
-        if (!Input.anyKey && (aniS.Finished || aniS.loop ))
+        /*if (!Input.anyKey && (aniS.Finished || aniS.loop ))
         {
             CharacterTransition(StateIdentifier.Standing, 0);
-        }
+        }*/
     }
 
     // Update is called once per frame
@@ -249,7 +252,8 @@ public class CharacterControl : MonoBehaviour
     {
         if (CurrentState.state == StateIdentifier.Walking)
         {
-            rb.velocity = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized * speed;
+            rb.velocity = new Vector3(Input.GetAxisRaw("Horizontal"), 0, rb.velocity.z).normalized * speed;
+            sm.Move((int)Input.GetAxisRaw("Vertical"));
             if (Input.GetAxisRaw("Horizontal") > 0)
             {
                 if (!aniS.forward)
