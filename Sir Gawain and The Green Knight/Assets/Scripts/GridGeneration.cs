@@ -13,14 +13,16 @@ public class GridGeneration : MonoBehaviour
     /// </summary>
     public int[,] grid;
 
-    [SerializeField]
-    private Vector2Int gridSize;
+    public Vector2Int gridSize;
 
     [SerializeField]
     private Vector2 stepSize;
 
     [SerializeField]
     private List<Vector2Int> obsticles;
+
+    [SerializeField]
+    private bool numsOn;
 
     private void Awake()
     {
@@ -36,13 +38,14 @@ public class GridGeneration : MonoBehaviour
 
     public Vector2Int GetGridPosFromWorld(Vector3 pos)
     {
+        pos = pos - transform.position;
         return new Vector2Int((int)((pos.x / stepSize.x) - (stepSize.x / 2)),
             (int)((pos.z / stepSize.y) - (stepSize.y / 2)));
     }
 
     private void MakeGrid()
     {
-        grid = new int[gridSize.x, gridSize.y];
+        grid = new int[gridSize.y, gridSize.x];
         for (int y = 0; y < gridSize.y; y++)
         {
             for (int x = 0; x < gridSize.x; x++)
@@ -58,8 +61,8 @@ public class GridGeneration : MonoBehaviour
             }
         }
     }
-
-    private void OnDrawGizmos()
+    
+    private void OnDrawGizmosSelected()
     {
         MakeGrid();
         for (int y = 0; y < gridSize.y; y++)
@@ -86,7 +89,8 @@ public class GridGeneration : MonoBehaviour
                     Gizmos.color = Color.yellow;
                     Gizmos.DrawWireCube(GetWorldPosFromGrid(new Vector2Int(x, y)), new Vector3(stepSize.x, 0, stepSize.y));
                 }
-                Handles.Label(GetWorldPosFromGrid(new Vector2Int(x, y)) + (Vector3.up * 0.3f ), x + " " + y, TextFieldStyles);
+                if (numsOn)
+                    Handles.Label(GetWorldPosFromGrid(new Vector2Int(x, y)) + (Vector3.up * 0.3f ), x + " " + y, TextFieldStyles);
             }
         }
     }

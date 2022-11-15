@@ -24,14 +24,14 @@ public class CharacterControl : MonoBehaviour
     [SerializeField]
     private LayerMask attackLayers;
 
+    [SerializeField]
+    private GridMovement grid;
+
     private List<KeyCode> orderOfInputs;
 
     private KeyCode blockingInput, receveingInput, parryingInput, attackingInput, chargingInput;
 
     private bool allowHit = true;
-
-    [SerializeField]
-    private SideMovement sm;
 
     void Awake()
     {
@@ -94,7 +94,7 @@ public class CharacterControl : MonoBehaviour
     private void Update()
     {
         //Movement input
-        if (Input.GetAxisRaw("Horizontal")!=0 || Input.GetAxisRaw("Vertical") != 0 || sm.move)
+        if (Input.GetAxisRaw("Horizontal")!=0 || Input.GetAxisRaw("Vertical") != 0 || grid.IsMoving())
         {
             CharacterTransition(StateIdentifier.Walking, 1);          
         }        
@@ -252,8 +252,8 @@ public class CharacterControl : MonoBehaviour
     {
         if (CurrentState.state == StateIdentifier.Walking)
         {
-            rb.velocity = new Vector3(Input.GetAxisRaw("Horizontal"), 0, rb.velocity.z).normalized * speed;
-            sm.Move((int)Input.GetAxisRaw("Vertical"));
+            grid.moveInDir(new Vector2Int((int)Input.GetAxisRaw("Horizontal"), (int)Input.GetAxisRaw("Vertical")));
+
             if (Input.GetAxisRaw("Horizontal") > 0)
             {
                 if (!aniS.forward)
@@ -271,10 +271,7 @@ public class CharacterControl : MonoBehaviour
                 }
             }
         }
-        else
-        {
-            rb.velocity = Vector3.zero;
-        }
+
         if (aniS.forward)
         {
             attackPoint.localPosition = new Vector3(Mathf.Abs(attackPoint.localPosition.x), 0, 0);
