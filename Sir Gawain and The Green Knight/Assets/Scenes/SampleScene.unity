@@ -18329,7 +18329,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c355e6eb8726024c923a409a047c06c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridSize: {x: 40, y: 6}
+  gridSize: {x: 200, y: 6}
   stepSize: {x: 0.5, y: 0.5}
   obsticles: []
   numsOn: 0

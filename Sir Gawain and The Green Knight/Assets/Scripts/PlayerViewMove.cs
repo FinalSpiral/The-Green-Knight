@@ -4,47 +4,34 @@ using UnityEngine;
 
 public class PlayerViewMove : MonoBehaviour
 {
-    public Transform left, right;
+    [SerializeField]
+    private Transform left, right;
 
-    private Rigidbody rb;
+    [SerializeField]
+    private GridGeneration grid;
 
-    private float xMove;
+    [SerializeField]
+    private GridMovement viewMove;
+
+    [SerializeField]
+    private GridMovement player;
 
     private void Start()
     {
-        rb = GetComponent<Rigidbody>();
+        
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void Update()
     {
-        if (other.tag == "Player")
+        if (player.getCurrentPos().x >= grid.GetGridPosFromWorld(right.position).x)
         {
-            xMove = other.GetComponent<Rigidbody>().velocity.x;
+            viewMove.moveInDir(new Vector2Int(1, 0));
+        }
+
+        if (player.getCurrentPos().x <= grid.GetGridPosFromWorld(left.position).x)
+        {
+            viewMove.moveInDir(new Vector2Int(-1, 0));
         }
     }
 
-    private void OnTriggerStay(Collider other)
-    {       
-        if (other.tag == "Player")
-        {
-            if (other.GetComponent<Rigidbody>().velocity.x != 0 && xMove != other.GetComponent<Rigidbody>().velocity.x)
-            {
-                xMove = other.GetComponent<Rigidbody>().velocity.x;
-            }
-
-            if (Vector3.Distance(other.transform.position, left.position) > Vector3.Distance(other.transform.position, right.position))
-            {
-                rb.velocity = new Vector3(Mathf.Abs(xMove), 0, 0);
-            }
-            else
-            {
-                rb.velocity = new Vector3(-Mathf.Abs(xMove), 0, 0);
-            }     
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        rb.velocity = Vector3.zero;
-    }
 }

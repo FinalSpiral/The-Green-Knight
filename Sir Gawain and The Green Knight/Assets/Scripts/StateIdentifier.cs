@@ -5,6 +5,7 @@ using UnityEngine;
 public enum StateIdentifier
 {
     Walking,
+    SideWalking,
     Blocking,
     Receiving,
     Attacking1,

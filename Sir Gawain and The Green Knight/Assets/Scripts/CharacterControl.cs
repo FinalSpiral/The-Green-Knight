@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody))]
 public class CharacterControl : MonoBehaviour
 {      
     private Rigidbody rb;
@@ -33,11 +32,16 @@ public class CharacterControl : MonoBehaviour
 
     private bool allowHit = true;
 
+    private Vector2Int inpt;
+
+    private List<int> orderOfMovement;
+
     void Awake()
     {
         //Definitions
         orderOfInputs = new List<KeyCode>();
-        rb = GetComponent<Rigidbody>();
+        orderOfMovement = new List<int>();
+        inpt = new Vector2Int(0, 0);
         //Input definitions
         blockingInput = KeyCode.Q;
         receveingInput = KeyCode.E;
@@ -62,10 +66,12 @@ public class CharacterControl : MonoBehaviour
         State attackCooldown3 = new State(StateIdentifier.AttackCooldown3);
         State charging = new State(StateIdentifier.Charging);
         State attackC = new State(StateIdentifier.AttackingC);
+        State sideWalking = new State(StateIdentifier.SideWalking);
 
         //State transitions
-        standing.AddTransitions(walking, stunned, hit, blocking, reciving, parrying, attacking1, charging);
-        walking.AddTransitions(standing, stunned, hit, blocking, reciving, parrying, attacking1, charging);
+        standing.AddTransitions(walking, sideWalking, stunned, hit, blocking, reciving, parrying, attacking1, charging);
+        walking.AddTransitions(standing, sideWalking, stunned, hit, blocking, reciving, parrying, attacking1, charging);
+        sideWalking.AddTransitions(standing, walking, stunned, hit, blocking, reciving, parrying, attacking1, charging);
         stunned.AddTransitions(standing);
         hit.AddTransitions(standing);
         blocking.AddTransitions(standing, reciving, parrying, attacking1, charging);
@@ -94,11 +100,40 @@ public class CharacterControl : MonoBehaviour
     private void Update()
     {
         //Movement input
-        if (Input.GetAxisRaw("Horizontal")!=0 || Input.GetAxisRaw("Vertical") != 0 || grid.IsMoving())
+        if (Input.GetAxisRaw("Horizontal") == 0)
         {
-            CharacterTransition(StateIdentifier.Walking, 1);          
-        }        
-        else if (CurrentState.state == StateIdentifier.Walking)
+            orderOfMovement.Remove(1);
+        }
+        else
+        {
+            if (!orderOfMovement.Contains(1))
+                orderOfMovement.Add(1);
+        }
+        if (Input.GetAxisRaw("Vertical") == 0)
+        {
+            orderOfMovement.Remove(2);
+        }
+        else
+        {
+            if (!orderOfMovement.Contains(2))
+                orderOfMovement.Add(2);
+        }
+
+        if (Input.GetAxisRaw("Horizontal") != 0 && (orderOfMovement.Count == 0 || orderOfMovement[orderOfMovement.Count - 1] == 1))
+        {           
+            CharacterTransition(StateIdentifier.Walking, 1);
+            inpt = new Vector2Int((int)Input.GetAxisRaw("Horizontal"), 0);
+        }
+        else if (Input.GetAxisRaw("Vertical") != 0 && (orderOfMovement.Count == 0 || orderOfMovement[orderOfMovement.Count - 1] == 2))
+        {
+            CharacterTransition(StateIdentifier.SideWalking, 16);
+            inpt = new Vector2Int(0, (int)Input.GetAxisRaw("Vertical"));
+        }
+        else if (grid.IsMoving())
+        {
+            inpt = new Vector2Int(0, 0);
+        }
+        else if (CurrentState.state == StateIdentifier.Walking || CurrentState.state == StateIdentifier.SideWalking)
         {
             CharacterTransition(StateIdentifier.Standing, 0);
         }
@@ -250,9 +285,9 @@ public class CharacterControl : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (CurrentState.state == StateIdentifier.Walking)
+        if (CurrentState.state == StateIdentifier.Walking || CurrentState.state == StateIdentifier.SideWalking)
         {
-            grid.moveInDir(new Vector2Int((int)Input.GetAxisRaw("Horizontal"), (int)Input.GetAxisRaw("Vertical")));
+            grid.moveInDir(inpt);
 
             if (Input.GetAxisRaw("Horizontal") > 0)
             {

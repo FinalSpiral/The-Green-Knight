@@ -18,11 +18,16 @@ public class GridMovement : MonoBehaviour
     [SerializeField]
     private float height;
 
+    [SerializeField]
+    private int type;
+
     private Vector3 heightAddition;
 
     private bool move = false;
 
     private Vector3 sPos, ePos, direction;
+
+    private int d = 1;
 
     private void Awake()
     {
@@ -34,21 +39,17 @@ public class GridMovement : MonoBehaviour
     void Start()
     {        
         transform.position = grid.GetWorldPosFromGrid(startPos) + heightAddition;
-        grid.grid[startPos.y, startPos.x] = 2;
+        grid.grid[startPos.y, startPos.x] = type;
     }
 
     // Update is called once per frame
     void Update()
     {
-        //THIS WILL BE REMOVED
-        //Input
-        //moveInDir(new Vector2Int((int)Input.GetAxisRaw("Horizontal"), (int)Input.GetAxisRaw("Vertical")));
-
         //Movement
         if (move)
         {
             transform.position += (direction).normalized * speed * Time.deltaTime;
-            if (Vector3InverseLerp(sPos, ePos, transform.position) >= 1)
+            if (Vector3InverseLerp(sPos, ePos, transform.position) >= 0.95)
             {
                 transform.position = ePos;
                 move = false;               
@@ -78,7 +79,8 @@ public class GridMovement : MonoBehaviour
 
                 grid.grid[currentPos.y, currentPos.x] = 0;
                 currentPos = new Vector2Int(currentPos.x + dir.x, currentPos.y);
-                grid.grid[currentPos.y, currentPos.x] = 2;
+                grid.grid[currentPos.y, currentPos.x] = type;
+                d = 1;
             }
             else if (grid.gridSize.y > currentPos.y + dir.y && 0 <= currentPos.y + dir.y && 
                 dir.y != 0 && grid.grid[currentPos.y + dir.y, currentPos.x] == 0)
@@ -90,7 +92,8 @@ public class GridMovement : MonoBehaviour
 
                 grid.grid[currentPos.y, currentPos.x] = 0;
                 currentPos = new Vector2Int(currentPos.x, currentPos.y + dir.y);
-                grid.grid[currentPos.y, currentPos.x] = 2;
+                grid.grid[currentPos.y, currentPos.x] = type;
+                d = 2;
             }
         }
     }
@@ -98,6 +101,23 @@ public class GridMovement : MonoBehaviour
     public bool IsMoving()
     {
         return move;
+    }
+
+    public Vector2Int getCurrentPos()
+    {
+        return currentPos;
+    }
+
+    public int getMoveAxis()
+    {
+        if (move)
+        {
+            return d;
+        }
+        else
+        {
+            return 0;
+        }
     }
 
 }
