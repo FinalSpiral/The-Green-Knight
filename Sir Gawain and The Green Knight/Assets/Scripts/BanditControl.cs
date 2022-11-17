@@ -20,6 +20,9 @@ public class BanditControl : MonoBehaviour
     [SerializeField]
     private LayerMask attackLayers;
 
+    [SerializeField]
+    private float startDirection;
+
     void Awake()
     {
         //Definitions
@@ -67,14 +70,14 @@ public class BanditControl : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        transform.localScale = new Vector3(transform.localScale.x*startDirection, transform.localScale.y, transform.localScale.z);
     }
 
     // Update is called once per frame
     void Update()
     {
         //Standing
-        if (aniS.Finished)
+        if (aniS.animationFinished())
         {
             CharacterTransition(StateIdentifier.Standing, 0);
         }
@@ -86,7 +89,7 @@ public class BanditControl : MonoBehaviour
         {
             CurrentState = CurrentState.MakeTransition(s);
             aniS.ChangeAnimation(a);
-            aniS.change = true;
+            //aniS.change = true;
         }
     }
 

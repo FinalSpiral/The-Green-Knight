@@ -16,12 +16,10 @@ public class GridMovement : MonoBehaviour
     private float speed;
 
     [SerializeField]
-    private float height;
+    private Vector3 Offset;
 
     [SerializeField]
     private int type;
-
-    private Vector3 heightAddition;
 
     private bool move = false;
 
@@ -31,14 +29,13 @@ public class GridMovement : MonoBehaviour
 
     private void Awake()
     {
-        heightAddition = Vector3.up * height;
         currentPos = startPos;
     }
 
     // Start is called before the first frame update
     void Start()
     {        
-        transform.position = grid.GetWorldPosFromGrid(startPos) + heightAddition;
+        transform.position = grid.GetWorldPosFromGrid(startPos) + Offset;
         grid.grid[startPos.y, startPos.x] = type;
     }
 
@@ -74,7 +71,7 @@ public class GridMovement : MonoBehaviour
             {
                 move = true;
                 sPos = transform.position;
-                ePos = grid.GetWorldPosFromGrid(new Vector2Int(currentPos.x + dir.x, currentPos.y)) + heightAddition;
+                ePos = grid.GetWorldPosFromGrid(new Vector2Int(currentPos.x + dir.x, currentPos.y)) + Offset;
                 direction = ePos - transform.position;
 
                 grid.grid[currentPos.y, currentPos.x] = 0;
@@ -87,7 +84,7 @@ public class GridMovement : MonoBehaviour
             {
                 move = true;
                 sPos = transform.position;
-                ePos = grid.GetWorldPosFromGrid(new Vector2Int(currentPos.x, currentPos.y + dir.y)) + heightAddition;
+                ePos = grid.GetWorldPosFromGrid(new Vector2Int(currentPos.x, currentPos.y + dir.y)) + Offset;
                 direction = ePos - transform.position;
 
                 grid.grid[currentPos.y, currentPos.x] = 0;

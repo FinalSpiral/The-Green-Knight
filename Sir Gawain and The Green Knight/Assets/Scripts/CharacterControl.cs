@@ -143,7 +143,7 @@ public class CharacterControl : MonoBehaviour
         {
             CharacterTransition(StateIdentifier.Stunned, 2);
         }
-        if(aniS.Finished && CurrentState.state == StateIdentifier.Stunned)
+        if(aniS.animationFinished() && CurrentState.state == StateIdentifier.Stunned)
         {
             CharacterTransition(StateIdentifier.Standing, 0);
         }
@@ -152,7 +152,7 @@ public class CharacterControl : MonoBehaviour
         {
             CharacterTransition(StateIdentifier.Hit, 3);
         }
-        if (aniS.Finished && CurrentState.state == StateIdentifier.Hit)
+        if (aniS.animationFinished() && CurrentState.state == StateIdentifier.Hit)
         {
             CharacterTransition(StateIdentifier.Standing, 0);
         }
@@ -208,11 +208,11 @@ public class CharacterControl : MonoBehaviour
             {
                 CharacterTransition(StateIdentifier.Parrying, 6);
             }
-            else if (aniS.Finished && CurrentState.state == StateIdentifier.Parrying)
+            else if (aniS.animationFinished() && CurrentState.state == StateIdentifier.Parrying)
             {
                 CharacterTransition(StateIdentifier.Cooldown, 7);
             }
-            else if (aniS.Finished && CurrentState.state == StateIdentifier.Cooldown)
+            else if (aniS.animationFinished() && CurrentState.state == StateIdentifier.Cooldown)
             {
                 CharacterTransition(StateIdentifier.Standing, 0);
             }
@@ -225,7 +225,7 @@ public class CharacterControl : MonoBehaviour
             {
                 CharacterTransition(StateIdentifier.Attacking1, 8);
             }
-            else if (aniS.Finished && CurrentState.state == StateIdentifier.Attacking1)
+            else if (aniS.animationFinished() && CurrentState.state == StateIdentifier.Attacking1)
             {
                 CharacterTransition(StateIdentifier.AttackCooldown1, 9);
             }
@@ -233,7 +233,7 @@ public class CharacterControl : MonoBehaviour
             {
                 CharacterTransition(StateIdentifier.Attacking2, 10);
             }
-            else if (aniS.Finished && CurrentState.state == StateIdentifier.Attacking2)
+            else if (aniS.animationFinished() && CurrentState.state == StateIdentifier.Attacking2)
             {
                 CharacterTransition(StateIdentifier.AttackCooldown2, 11);
             }
@@ -241,15 +241,17 @@ public class CharacterControl : MonoBehaviour
             {
                 CharacterTransition(StateIdentifier.Attacking3, 12);
             }
-            else if (aniS.Finished && CurrentState.state == StateIdentifier.Attacking3)
+            else if (aniS.animationFinished() && CurrentState.state == StateIdentifier.Attacking3)
             {
                 CharacterTransition(StateIdentifier.AttackCooldown3, 13);
             }
-            else if (aniS.Finished && 
-                CurrentState.state == StateIdentifier.AttackCooldown1 ||
+            else if (aniS.animationFinished() && 
+                (CurrentState.state == StateIdentifier.AttackCooldown1 ||
                 CurrentState.state == StateIdentifier.AttackCooldown2 ||
-                CurrentState.state == StateIdentifier.AttackCooldown3)
+                CurrentState.state == StateIdentifier.AttackCooldown3))
             {
+                Debug.Log("ello");
+                Debug.Log(aniS.animationFinished());
                 CharacterTransition(StateIdentifier.Standing, 0);
             }
         }
@@ -261,15 +263,15 @@ public class CharacterControl : MonoBehaviour
             {
                 CharacterTransition(StateIdentifier.Charging, 14);
             }
-            else if (aniS.Finished && CurrentState.state == StateIdentifier.Charging)
+            else if (aniS.animationFinished() && CurrentState.state == StateIdentifier.Charging)
             {
                 CharacterTransition(StateIdentifier.AttackingC, 15);
             }
-            else if (aniS.Finished && CurrentState.state == StateIdentifier.AttackingC)
+            else if (aniS.animationFinished() && CurrentState.state == StateIdentifier.AttackingC)
             {
                 CharacterTransition(StateIdentifier.AttackCooldown3, 13);
             }
-            else if (aniS.Finished && CurrentState.state == StateIdentifier.AttackCooldown3)
+            else if (aniS.animationFinished() && CurrentState.state == StateIdentifier.AttackCooldown3)
             {
                 CharacterTransition(StateIdentifier.Standing, 0);
             }
@@ -280,6 +282,7 @@ public class CharacterControl : MonoBehaviour
         {
             CharacterTransition(StateIdentifier.Standing, 0);
         }*/
+        //Debug.Log(CurrentState.state);
     }
 
     // Update is called once per frame
@@ -291,33 +294,17 @@ public class CharacterControl : MonoBehaviour
 
             if (Input.GetAxisRaw("Horizontal") > 0)
             {
-                if (!aniS.forward)
-                {
-                    aniS.change = true;
-                    aniS.forward = true;
-                }
+                transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
             }
             else if(Input.GetAxisRaw("Horizontal") < 0)
             {
-                if (aniS.forward)
-                {
-                    aniS.change = true;
-                    aniS.forward = false;
-                }
+                transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * -1, transform.localScale.y, transform.localScale.z);
             }
         }
-
-        if (aniS.forward)
-        {
-            attackPoint.localPosition = new Vector3(Mathf.Abs(attackPoint.localPosition.x), 0, 0);
-        }
-        else
-        {
-            attackPoint.localPosition = new Vector3(-Mathf.Abs(attackPoint.localPosition.x), 0, 0);
-        }
+        
         if (CurrentState.state == StateIdentifier.Parrying)
         {
-            if (aniS.getImageNum() == aniS.animations[aniS.aniIndex()].attackFrame)
+            if (aniS.getCurrentFrameImage() == aniS.getCurrentAnimationData().attackFrame)
             {
                 if (allowHit)
                 {
@@ -339,7 +326,7 @@ public class CharacterControl : MonoBehaviour
             CurrentState.state == StateIdentifier.Attacking3 ||
             CurrentState.state == StateIdentifier.AttackingC)
         {
-            if (aniS.getImageNum() == aniS.animations[aniS.aniIndex()].attackFrame)
+            if (aniS.getCurrentFrameImage() == aniS.getCurrentAnimationData().attackFrame)
             {
                 if (allowHit)
                 {
@@ -368,9 +355,10 @@ public class CharacterControl : MonoBehaviour
     {
         if (CurrentState.CheckTransitionPosibility(s))
         {
+            Debug.Log("pre transition: " + CurrentState.state);
             CurrentState = CurrentState.MakeTransition(s);
             aniS.ChangeAnimation(a + (int)CurrentMode);
-            aniS.change = true;
+            Debug.Log("post transition: " + CurrentState.state);
         }
     }
 

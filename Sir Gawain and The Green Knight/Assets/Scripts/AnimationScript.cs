@@ -2,260 +2,135 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(MeshFilter))]
 public class AnimationScript : MonoBehaviour
 {
+    /// <summary>
+    /// Inputs:
+    /// Mesh
+    /// AnimationData[]
+    /// Math
+    /// ChangeAnimation
+    /// StartAnimation
+    /// 
+    /// Outputs:
+    /// FrameNum
+    /// Finished
+    /// AnimationData[]
+    /// Direction
+    /// </summary>
+
+    /*widthI = width / stepX; heightI = height / stepY;
+    i = animations[animationIndex].from;
+    xI = i - ((i / widthI) * widthI); yI = i / widthI;
+
+    x = xI * stepX;
+    y = height - (stepY * yI);
+
+    mesh = GetComponent<MeshFilter>().mesh;
+    if (forward)
+    {
+        uv[0] = ConvertPixelsToUVCord(x + 1, y - stepY, width, height);
+        uv[1] = ConvertPixelsToUVCord(x + stepX - 1, y - stepY, width, height);
+        uv[2] = ConvertPixelsToUVCord(x + 1, y - 1, width, height);
+        uv[3] = ConvertPixelsToUVCord(x + stepX - 1, y - 1, width, height);
+    }
+    else
+    {
+        uv[1] = ConvertPixelsToUVCord(x + 1, y - stepY, width, height);
+        uv[0] = ConvertPixelsToUVCord(x + stepX - 1, y - stepY, width, height);
+        uv[3] = ConvertPixelsToUVCord(x + 1, y - 1, width, height);
+        uv[2] = ConvertPixelsToUVCord(x + stepX - 1, y - 1, width, height);
+    }
+
+    mesh.uv = uv;*/
+
+    //Input variables
     private Mesh mesh;
 
-    private Vector2[] uv = new Vector2[4];
-
     [SerializeField]
-    private int framesPerSecond, width, height, stepX, stepY, animationIndex;
+    private int width, height, stepX, stepY, startAnimationIndex;
 
     public List<AnimationData> animations;
 
-    [SerializeField]
-    private List<Vector2Int> frameCol;
-    [SerializeField]
-    private bool copyMode = false;
-    [SerializeField]
-    private AnimationScript copy;
+    //Utility variables
+    private int framesPerSecond, animationIndex;
 
-    public bool forward = true;
+    private Vector2[] uv = new Vector2[4];
 
-    [HideInInspector]
-    public bool change = false, lastFrame=false;
+    private int i = 0, x, y, widthI, heightI, yI, xI;
 
-    [HideInInspector]
-    public int ic = 0;
+    private bool finished = false, animate = true, draw = true;
 
-    private float time, frameSpan;
+    private float time = 0;
 
-    private bool animate = true;
-    
-    private bool finished = false;
-
-    public bool Finished { get { return finished; } }
-
-    [HideInInspector]
-    public bool loop = false;
-
-    int i = 0, x, y, widthI, heightI, yI, xI;
-
-    private int i2 = -1;
+    private void Awake()
+    {
+        //Declarations
+        mesh = GetComponent<MeshFilter>().mesh;
+        i = animations[startAnimationIndex].from;
+        animationIndex = startAnimationIndex;
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-        if (copyMode)
-        {
-            widthI = width / stepX; heightI = height / stepY;
-            i = copy.ic;
-            forward = copy.forward;
-            xI = i - ((i / widthI) * widthI); yI = i / widthI;
-
-            x = xI * stepX;
-            y = height - (stepY * yI);
-
-            mesh = GetComponent<MeshFilter>().mesh;
-            if (forward)
-            {
-                uv[0] = ConvertPixelsToUVCord(x, y - stepY, width, height);
-                uv[1] = ConvertPixelsToUVCord(x + stepX, y - stepY, width, height);
-                uv[2] = ConvertPixelsToUVCord(x, y, width, height);
-                uv[3] = ConvertPixelsToUVCord(x + stepX, y, width, height);
-            }
-            else
-            {
-                uv[1] = ConvertPixelsToUVCord(x, y - stepY, width, height);
-                uv[0] = ConvertPixelsToUVCord(x + stepX, y - stepY, width, height);
-                uv[3] = ConvertPixelsToUVCord(x, y, width, height);
-                uv[2] = ConvertPixelsToUVCord(x + stepX, y, width, height);
-            }
-
-            mesh.uv = uv;
-        }
-        else
-        {           
-            framesPerSecond = animations[animationIndex].framesPerSecond;
-            widthI = width / stepX; heightI = height / stepY;
-
-            i = animations[animationIndex].from;
-
-            xI = i - ((i / widthI) * widthI); yI = i / widthI;
-
-            x = xI * stepX;
-            y = height - (stepY * yI);
-
-            if (!animations[animationIndex].loop)
-            {
-                loop = false;
-            }
-            else
-            {
-                loop = true;
-            }
-
-            frameSpan = 1f / framesPerSecond;
-            time = frameSpan;
-            mesh = GetComponent<MeshFilter>().mesh;
-            if (forward)
-            {
-                ic = i;
-                uv[0] = ConvertPixelsToUVCord(x + 1, y - stepY, width, height);
-                uv[1] = ConvertPixelsToUVCord(x + stepX - 1, y - stepY, width, height);
-                uv[2] = ConvertPixelsToUVCord(x + 1, y - 1, width, height);
-                uv[3] = ConvertPixelsToUVCord(x + stepX - 1, y - 1, width, height);
-            }
-            else
-            {
-                ic = i;
-                uv[1] = ConvertPixelsToUVCord(x + 1, y - stepY, width, height);
-                uv[0] = ConvertPixelsToUVCord(x + stepX - 1, y - stepY, width, height);
-                uv[3] = ConvertPixelsToUVCord(x + 1, y - 1, width, height);
-                uv[2] = ConvertPixelsToUVCord(x + stepX - 1, y - 1, width, height);
-            }
-
-            mesh.uv = uv;
-        }
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (copyMode)
+        if (animate)
         {
-            i = copy.ic;
-            if (i2 != i)
+            time -= Time.deltaTime;
+            if (time <= 0)
             {
-                widthI = width / stepX; heightI = height / stepY;
-                i2 = i;
-                forward = copy.forward;
-                xI = i - ((i / widthI) * widthI); yI = i / widthI;
-
-                x = xI * stepX;
-                y = height - (stepY * yI);
-
-                mesh = GetComponent<MeshFilter>().mesh;
-                if (forward)
+                if (i > animations[animationIndex].to)
                 {
+                    if (animations[animationIndex].loop)
+                    {
+                        i = animations[animationIndex].from;
+                        draw = true;
+                        finished = false;
+                    }
+                    else
+                    {
+                        animate = false;
+                        draw = false;
+                        finished = true;
+                        Debug.Log("Finnished: " + i);
+                    }
+                }
+
+                if (draw)
+                {
+                    Debug.Log(i);
+                    //Do math
+                    widthI = width / stepX; heightI = height / stepY;
+
+                    xI = i - ((i / widthI) * widthI); yI = i / widthI;
+
+                    x = xI * stepX;
+                    y = height - (stepY * yI);
+
+                    //Draw frame
                     uv[0] = ConvertPixelsToUVCord(x + 1, y - stepY, width, height);
                     uv[1] = ConvertPixelsToUVCord(x + stepX - 1, y - stepY, width, height);
                     uv[2] = ConvertPixelsToUVCord(x + 1, y - 1, width, height);
                     uv[3] = ConvertPixelsToUVCord(x + stepX - 1, y - 1, width, height);
-                }
-                else
-                {
-                    uv[1] = ConvertPixelsToUVCord(x + 1, y - stepY, width, height);
-                    uv[0] = ConvertPixelsToUVCord(x + stepX - 1, y - stepY, width, height);
-                    uv[3] = ConvertPixelsToUVCord(x + 1, y - 1, width, height);
-                    uv[2] = ConvertPixelsToUVCord(x + stepX - 1, y - 1, width, height);
-                }
-
-                mesh.uv = uv;
-            }
-        }
-        else
-        {
-            if (animate)
-            {
-                if (!animations[animationIndex].loop)
-                {
-                    loop = false;
-                }
-                else
-                {
-                    loop = true;
-                }
-                framesPerSecond = animations[animationIndex].framesPerSecond;
-                time -= Time.deltaTime;
-                if (time <= 0)
-                {
-                    xI = i - ((i / widthI) * widthI); yI = i / widthI;
-
-                    x = xI * stepX;
-                    y = height - (stepY * yI);
-
-                    if (forward)
-                    {
-                        ic = i;
-                        uv[0] = ConvertPixelsToUVCord(x + 1, y - stepY, width, height);
-                        uv[1] = ConvertPixelsToUVCord(x + stepX - 1, y - stepY, width, height);
-                        uv[2] = ConvertPixelsToUVCord(x + 1, y - 1, width, height);
-                        uv[3] = ConvertPixelsToUVCord(x + stepX - 1, y - 1, width, height);
-                    }
-                    else
-                    {
-                        ic = i;
-                        uv[1] = ConvertPixelsToUVCord(x + 1, y - stepY, width, height);
-                        uv[0] = ConvertPixelsToUVCord(x + stepX - 1, y - stepY, width, height);
-                        uv[3] = ConvertPixelsToUVCord(x + 1, y - 1, width, height);
-                        uv[2] = ConvertPixelsToUVCord(x + stepX - 1, y - 1, width, height);
-                    }
 
                     mesh.uv = uv;
-                    i++;
-
-                    if (i > animations[animationIndex].to)
-                    {
-                        if (!animations[animationIndex].loop && lastFrame)
-                        {
-                            animate = false;
-                            finished = true;
-                            lastFrame = false;
-                            i = animations[animationIndex].from;
-                        }
-                        else if (!animations[animationIndex].loop)
-                        {
-                            lastFrame = true;
-                            i--;
-                        }
-                        if (animations[animationIndex].loop)
-                            i = animations[animationIndex].from;
-                    }
-
-                    frameSpan = 1f / framesPerSecond;
-                    time = frameSpan;
                 }
-                if (change)
-                {
-                    xI = i - ((i / widthI) * widthI); yI = i / widthI;
 
-                    x = xI * stepX;
-                    y = height - (stepY * yI);
-                    if (forward)
-                    {
-                        ic = i;
-                        uv[0] = ConvertPixelsToUVCord(x + 1, y - stepY, width, height);
-                        uv[1] = ConvertPixelsToUVCord(x + stepX - 1, y - stepY, width, height);
-                        uv[2] = ConvertPixelsToUVCord(x + 1, y - 1, width, height);
-                        uv[3] = ConvertPixelsToUVCord(x + stepX - 1, y - 1, width, height);
-                    }
-                    else
-                    {
-                        ic = i;
-                        uv[1] = ConvertPixelsToUVCord(x + 1, y - stepY, width, height);
-                        uv[0] = ConvertPixelsToUVCord(x + stepX - 1, y - stepY, width, height);
-                        uv[3] = ConvertPixelsToUVCord(x + 1, y - 1, width, height);
-                        uv[2] = ConvertPixelsToUVCord(x + stepX - 1, y - 1, width, height);
-                    }
-                    framesPerSecond = animations[animationIndex].framesPerSecond;
-                    frameSpan = 1f / framesPerSecond;
-                    time = frameSpan;
-                    mesh.uv = uv;
-                    change = false;
-                }
+                //Time
+                time = 1f / animations[animationIndex].framesPerSecond;
+                i++;
             }
         }
     }
 
-    public void ChangeAnimation(int aI)
-    {
-        animationIndex = aI;
-        i = animations[animationIndex].from;
-        animate = true;
-        finished = false;
-    }
-
+    //Utility functions
     public Vector2 ConvertPixelsToUVCord(int x, int y, int textureWidth, int textureHeight)
     {
         return new Vector2((float)x / textureWidth, (float)y / textureHeight);
@@ -266,12 +141,41 @@ public class AnimationScript : MonoBehaviour
         return new Vector2();
     }
 
-    public int aniIndex()
+    //Input functions
+    public void ChangeAnimation(int aI)
+    {        
+        i = animations[aI].from;
+        animationIndex = aI;
+        time = 0;
+        animate = true;
+        draw = true;
+        finished = false;
+    }
+
+    //Output functions
+    public int getCurrentAnimationIndex()
     {
         return animationIndex;
     }
-    public int getImageNum()
+
+    public AnimationData getCurrentAnimationData()
     {
-        return i;
+        return animations[animationIndex];
+    }
+
+    public int getCurrentFrameImage()
+    {
+        return i-1;
+    }
+
+    public int getCurrentDirection()
+    {
+        return -1;
+    }
+
+    public bool animationFinished()
+    {
+        //Debug.Log(finished);
+        return finished;
     }
 }
