@@ -9,7 +9,7 @@ public class GridGeneration : MonoBehaviour
     /// 0 = can move through, green
     /// 1 = can't move through, red
     /// 2 = player, can't move through, blue
-    /// 3 = enemy, can't move through, purple
+    /// 3 = enemy, can't move through, magenta
     /// </summary>
     public int[,] grid;
 
@@ -22,7 +22,7 @@ public class GridGeneration : MonoBehaviour
     private List<Vector2Int> obsticles;
 
     [SerializeField]
-    private bool numsOn;
+    private bool drawGrid, numsOn;
 
     private void Awake()
     {
@@ -64,33 +64,49 @@ public class GridGeneration : MonoBehaviour
     
     private void OnDrawGizmosSelected()
     {
-        MakeGrid();
-        for (int y = 0; y < gridSize.y; y++)
+        if (drawGrid)
         {
-            for (int x = 0; x < gridSize.x; x++)
+            if (grid == null || drawGrid)
+                MakeGrid();
+            for (int y = 0; y < gridSize.y; y++)
             {
-                GUIStyle TextFieldStyles = new GUIStyle(EditorStyles.textField);
+                for (int x = 0; x < gridSize.x; x++)
+                {
+                    GUIStyle TextFieldStyles = new GUIStyle(EditorStyles.textField);
 
-                if (grid[y, x] == 0)
-                {
-                    TextFieldStyles.normal.textColor = Color.green;
-                    Gizmos.color = Color.green;
-                    Gizmos.DrawWireCube(GetWorldPosFromGrid(new Vector2Int(x, y)), new Vector3(stepSize.x, 0, stepSize.y));
+                    if (grid[y, x] == 0)
+                    {
+                        TextFieldStyles.normal.textColor = Color.green;
+                        Gizmos.color = Color.green;
+                        Gizmos.DrawWireCube(GetWorldPosFromGrid(new Vector2Int(x, y)), new Vector3(stepSize.x, 0, stepSize.y));
+                    }
+                    else if (grid[y, x] == 1)
+                    {
+                        TextFieldStyles.normal.textColor = Color.red;
+                        Gizmos.color = Color.red;
+                        Gizmos.DrawWireCube(GetWorldPosFromGrid(new Vector2Int(x, y)), new Vector3(stepSize.x - 0.1f, 0, stepSize.y - 0.1f));
+                    }
+                    else if (grid[y, x] == 2)
+                    {
+                        TextFieldStyles.normal.textColor = Color.blue;
+                        Gizmos.color = Color.blue;
+                        Gizmos.DrawWireCube(GetWorldPosFromGrid(new Vector2Int(x, y)), new Vector3(stepSize.x - 0.1f, 0, stepSize.y - 0.1f));
+                    }
+                    else if (grid[y, x] == 3)
+                    {
+                        TextFieldStyles.normal.textColor = Color.magenta;
+                        Gizmos.color = Color.magenta;
+                        Gizmos.DrawWireCube(GetWorldPosFromGrid(new Vector2Int(x, y)), new Vector3(stepSize.x - 0.1f, 0, stepSize.y - 0.1f));
+                    }
+                    else
+                    {
+                        TextFieldStyles.normal.textColor = Color.yellow;
+                        Gizmos.color = Color.yellow;
+                        Gizmos.DrawWireCube(GetWorldPosFromGrid(new Vector2Int(x, y)), new Vector3(stepSize.x, 0, stepSize.y));
+                    }
+                    if (numsOn)
+                        Handles.Label(GetWorldPosFromGrid(new Vector2Int(x, y)) + (Vector3.up * 0.3f), x + " " + y, TextFieldStyles);
                 }
-                else if(grid[y, x] == 1)
-                {
-                    TextFieldStyles.normal.textColor = Color.red;
-                    Gizmos.color = Color.red;
-                    Gizmos.DrawWireCube(GetWorldPosFromGrid(new Vector2Int(x, y)), new Vector3(stepSize.x-0.1f, 0, stepSize.y-0.1f));
-                }
-                else
-                {
-                    TextFieldStyles.normal.textColor = Color.yellow;
-                    Gizmos.color = Color.yellow;
-                    Gizmos.DrawWireCube(GetWorldPosFromGrid(new Vector2Int(x, y)), new Vector3(stepSize.x, 0, stepSize.y));
-                }
-                if (numsOn)
-                    Handles.Label(GetWorldPosFromGrid(new Vector2Int(x, y)) + (Vector3.up * 0.3f ), x + " " + y, TextFieldStyles);
             }
         }
     }

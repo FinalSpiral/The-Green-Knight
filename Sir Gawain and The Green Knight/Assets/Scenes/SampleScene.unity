@@ -15675,10 +15675,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grid: {fileID: 1216024884}
-  startPos: {x: 39, y: 2}
+  startPos: {x: 19, y: 2}
   speed: 2
   Offset: {x: 0, y: 0.5, z: -0.01}
   type: 2
+  noclip: 0
 --- !u!1 &1052206498
 GameObject:
   m_ObjectHideFlags: 0
@@ -18304,8 +18305,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c355e6eb8726024c923a409a047c06c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridSize: {x: 400, y: 6}
-  stepSize: {x: 0.25, y: 0.5}
+  gridSize: {x: 200, y: 6}
+  stepSize: {x: 0.5, y: 0.5}
   obsticles: []
   numsOn: 0
 --- !u!4 &1216024885
@@ -21304,10 +21305,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grid: {fileID: 1216024884}
-  startPos: {x: 58, y: 2}
+  startPos: {x: 30, y: 2}
   speed: 2
   Offset: {x: 0, y: 0.5, z: 0}
   type: 3
+  noclip: 0
 --- !u!65 &1501361117
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -24021,7 +24023,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh22238
+  m_Name: pb_Mesh86220
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -24280,10 +24282,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grid: {fileID: 1216024884}
-  startPos: {x: 39, y: 2}
+  startPos: {x: 19, y: 2}
   speed: 2
   Offset: {x: 0, y: 0, z: 0}
   type: 0
+  noclip: 1
 --- !u!114 &1854450299
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -100,44 +100,35 @@ public class CharacterControl : MonoBehaviour
     private void Update()
     {
         //Movement input
-        if (Input.GetAxisRaw("Horizontal") == 0)
-        {
-            orderOfMovement.Remove(1);
-        }
-        else
-        {
-            if (!orderOfMovement.Contains(1))
-                orderOfMovement.Add(1);
-        }
-        if (Input.GetAxisRaw("Vertical") == 0)
-        {
-            orderOfMovement.Remove(2);
-        }
-        else
-        {
-            if (!orderOfMovement.Contains(2))
-                orderOfMovement.Add(2);
-        }
-
-        if (Input.GetAxisRaw("Horizontal") != 0 && (orderOfMovement.Count == 0 || orderOfMovement[orderOfMovement.Count - 1] == 1))
+        if (Input.GetAxisRaw("Horizontal") != 0)
         {           
-            CharacterTransition(StateIdentifier.Walking, 1);
-            inpt = new Vector2Int((int)Input.GetAxisRaw("Horizontal"), 0);
+            inpt = new Vector2Int((int)Input.GetAxisRaw("Horizontal"), (int)Input.GetAxisRaw("Vertical"));
+            grid.moveInDir(inpt);
+            if (grid.IsMoving())
+            {
+                CharacterTransition(StateIdentifier.Walking, 1);
+            }
         }
-        else if (Input.GetAxisRaw("Vertical") != 0 && (orderOfMovement.Count == 0 || orderOfMovement[orderOfMovement.Count - 1] == 2))
+        else if (Input.GetAxisRaw("Vertical") != 0)
         {
-            CharacterTransition(StateIdentifier.SideWalking, 16);
             inpt = new Vector2Int(0, (int)Input.GetAxisRaw("Vertical"));
-        }
+            grid.moveInDir(inpt);
+            if (grid.IsMoving())
+            {
+                CharacterTransition(StateIdentifier.SideWalking, 16);
+            }
+        }       
         else if (grid.IsMoving())
         {
             inpt = new Vector2Int(0, 0);
+            grid.moveInDir(inpt);
         }
-        else if (CurrentState.state == StateIdentifier.Walking || CurrentState.state == StateIdentifier.SideWalking)
+
+        if ((CurrentState.state == StateIdentifier.Walking || CurrentState.state == StateIdentifier.SideWalking) && !grid.IsMoving())
         {
             CharacterTransition(StateIdentifier.Standing, 0);
         }
-      
+
         //this will get transfered into colision detection
         if (Input.GetKeyDown(KeyCode.F))
         {
@@ -289,8 +280,8 @@ public class CharacterControl : MonoBehaviour
     void FixedUpdate()
     {
         if (CurrentState.state == StateIdentifier.Walking || CurrentState.state == StateIdentifier.SideWalking)
-        {
-            grid.moveInDir(inpt);
+        {            
+            
 
             if (Input.GetAxisRaw("Horizontal") > 0)
             {
